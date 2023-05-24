@@ -11,6 +11,15 @@ const userCtrl = {
             return res.status(500).json({msg: err.message})
         }
     },
+    getUsers: async (req, res) => {
+        try {
+            const users = await Users.find({})
+            res.json({users})
+        } catch (err) {
+            console.log(err)
+            return res.status(500).json({msg: err.message})
+        }
+    },
     getUser: async (req, res) => {
         try {
             const user = await Users.findById(req.params.id).select('-password')
@@ -39,20 +48,21 @@ const userCtrl = {
     },
     follow: async (req, res) => {
         try {
-            const user = await Users.find({_id: req.params.id, followers: req.user._id})
+            const user = await Users.find({_id: req.params.id, followers: req.body._id})
             if(user.length > 0) return res.status(500).json({msg: "You followed this user."})
 
             const newUser = await Users.findOneAndUpdate({_id: req.params.id}, { 
-                $push: {followers: req.user._id}
+                $push: {followers: req.body._id}
             }, {new: true}).populate("followers following", "-password")
 
-            await Users.findOneAndUpdate({_id: req.user._id}, {
+            await Users.findOneAndUpdate({_id: req.body._id}, {
                 $push: {following: req.params.id}
             }, {new: true})
 
             res.json({newUser})
 
         } catch (err) {
+            console.log(err)
             return res.status(500).json({msg: err.message})
         }
     },
@@ -60,10 +70,10 @@ const userCtrl = {
         try {
 
             const newUser = await Users.findOneAndUpdate({_id: req.params.id}, { 
-                $pull: {followers: req.user._id}
+                $pull: {followers: req.body._id}
             }, {new: true}).populate("followers following", "-password")
 
-            await Users.findOneAndUpdate({_id: req.user._id}, {
+            await Users.findOneAndUpdate({_id: req.body._id}, {
                 $pull: {following: req.params.id}
             }, {new: true})
 
