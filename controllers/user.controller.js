@@ -13,7 +13,7 @@ const userCtrl = {
     },
     getUsers: async (req, res) => {
         try {
-            const users = await Users.find({})
+            const users = await Users.find({ _id: { $ne: req.params.id } })
             res.json({users})
         } catch (err) {
             console.log(err)

@@ -5,7 +5,7 @@ const userCtrl = require("../controllers/user.controller")
 
 
 router.get('/search', auth, userCtrl.searchUser)
-router.get('/users', userCtrl.getUsers)
+router.get('/users/:id', userCtrl.getUsers)
 
 router.get('/user/:id', userCtrl.getUser)
 
