@@ -9,7 +9,7 @@ router.get('/users/:id', userCtrl.getUsers)
 
 router.get('/user/:id', userCtrl.getUser)
 
-router.patch('/user', auth, userCtrl.updateUser)
+router.patch('/user/:id', userCtrl.updateUser)
 
 router.patch('/user/:id/follow', userCtrl.follow)
 router.patch('/user/:id/unfollow', userCtrl.unfollow)
